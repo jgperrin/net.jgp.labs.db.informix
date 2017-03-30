@@ -20,11 +20,11 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		<!--  dependency>
+		<dependency>
 			<groupId>com.ibm.informix</groupId>
 			<artifactId>jdbc</artifactId>
 			<version>4.10.8.1</version>
-		</dependency -->
+		</dependency>
 	</dependencies>
 
 	<build>

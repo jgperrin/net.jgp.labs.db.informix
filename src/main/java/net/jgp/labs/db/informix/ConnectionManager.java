@@ -6,7 +6,25 @@ import java.sql.SQLException;
 
 public class ConnectionManager {
 
+	/**
+	 * Hostname using IPv6.
+	 */
+	private String hostname = "[::1]";
+
+	private int port = 33378;
+	
+	private String user = "informix";
+	
+	private String password = "in4mix";
+
+	private static ConnectionManager instance = null;
+	
 	public static Connection getConnection() {
+		ConnectionManager cm = ConnectionManager.getInstance();
+		return cm.getConnection0();
+	}
+
+	private Connection getConnection0() {
 		Connection connect;
 		try {
 			Class.forName("com.informix.jdbc.IfxDriver");
@@ -17,10 +35,10 @@ public class ConnectionManager {
 		}
 
 		// Setup the connection with the DB
-//		String jdbcUrl = "jdbc:informix-sqli://localhost:33379/stores_demo:INFORMIXSERVER=ol_informix1210;user=informix;password=in4mix";
-		String jdbcUrl = "jdbc:informix-sqli://[::1]:33378/stores_demo:INFORMIXSERVER=lo_informix1210;user=informix;password=in4mix";
+		String jdbcUrl = "jdbc:informix-sqli://" + hostname + ":" + port
+				+ "/stores_demo:INFORMIXSERVER=lo_informix1210";
 		try {
-			connect = DriverManager.getConnection(jdbcUrl);
+			connect = DriverManager.getConnection(jdbcUrl, user, password);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -28,6 +46,13 @@ public class ConnectionManager {
 		}
 
 		return connect;
+	}
+
+	private static ConnectionManager getInstance() {
+		if (instance == null) {
+			instance = new ConnectionManager();
+		}
+		return instance;
 	}
 
 }
