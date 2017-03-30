@@ -13,16 +13,20 @@ public class ConnectionManager {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
+
 		// Setup the connection with the DB
+//		String jdbcUrl = "jdbc:informix-sqli://localhost:33379/stores_demo:INFORMIXSERVER=ol_informix1210;user=informix;password=in4mix";
+		String jdbcUrl = "jdbc:informix-sqli://[::1]:33378/stores_demo:INFORMIXSERVER=lo_informix1210;user=informix;password=in4mix";
 		try {
-			connect = DriverManager
-					.getConnection("jdbc:mysql://localhost/sakila?" + "user=root&password=password");
+			connect = DriverManager.getConnection(jdbcUrl);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
+
 		return connect;
 	}
 
