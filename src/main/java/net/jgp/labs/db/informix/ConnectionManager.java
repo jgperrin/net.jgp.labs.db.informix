@@ -9,7 +9,7 @@ public class ConnectionManager {
 	public static Connection getConnection() {
 		Connection connect;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.informix.jdbc.IfxDriver");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
