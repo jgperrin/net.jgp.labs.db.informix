@@ -6,15 +6,46 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import net.jgp.labs.db.informix.utils.ConnectionManager;
+import net.jgp.labs.db.informix.utils.PrettyFormatter;
 
 public class ReadRecord {
 
 	public static void main(String[] args) {
 		ReadRecord rr = new ReadRecord();
 		rr.executeDbOperation("SELECT * FROM items ORDER BY item_num");
+		rr.executeDbOperation("SELECT * FROM manufact ORDER BY manu_code");
+		rr.executeDbOperation("SELECT * FROM items, manufact WHERE items.manu_code = manufact.manu_code ORDER BY item_num");
 	}
 
-	private boolean executeDbOperation(String query) {
+	public boolean executeDbOperation(String query) {
+		Statement statement = ConnectionManager.getStatement();
+		if (statement == null) {
+			return false;
+		}
+		
+		ResultSet resultSet;
+		try {
+			resultSet = statement.executeQuery(query);
+		} catch (SQLException e) {
+			System.out.println("Could not get a result set: " + e.getMessage());
+			return false;
+		}
+		
+		PrettyFormatter pf = new PrettyFormatter();
+		pf.set(resultSet);
+		pf.show();
+		
+		return true;
+	}
+
+	/**
+	 * This function really only works with the 'items' table, as the display
+	 * assumes you have only those columns...
+	 * 
+	 * @param query
+	 * @return
+	 */
+	public boolean executeDbOperationDetailed(String query) {
 		Connection connection = ConnectionManager.getConnection();
 		if (connection == null) {
 			return false;
@@ -50,8 +81,8 @@ public class ReadRecord {
 				double totalPrice = resultSet.getDouble("total_price");
 
 				// Display values
-				System.out.printf("|%8d|%9d|%9d|%-9s|%8d|%11.2f|\n", itemNum, orderNum, stockNum, manufacturerCode, quantity,
-						totalPrice);
+				System.out.printf("|%8d|%9d|%9d|%-9s|%8d|%11.2f|\n", itemNum, orderNum, stockNum, manufacturerCode,
+						quantity, totalPrice);
 			}
 			System.out.println("+--------+---------+---------+---------+--------+-----------+");
 		} catch (SQLException e) {

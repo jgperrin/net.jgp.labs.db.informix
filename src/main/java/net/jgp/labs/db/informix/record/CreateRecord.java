@@ -8,7 +8,7 @@ import net.jgp.labs.db.informix.utils.ConnectionManager;
 public class CreateRecord {
 	public static void main(String[] args) {
 		CreateRecord cr = new CreateRecord();
-		cr.executeDbOperation("INSERT INTO manufact VALUES ('SNT', 'Santa Claus', null)");
+		cr.executeDbOperation("INSERT INTO manufact VALUES ('SNT', 'Santa Claus', '365')");
 	}
 
 	public boolean executeDbOperation(String sqlStatement) {
