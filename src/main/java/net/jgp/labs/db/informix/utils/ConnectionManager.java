@@ -1,8 +1,9 @@
-package net.jgp.labs.db.informix;
+package net.jgp.labs.db.informix.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ConnectionManager {
 
@@ -57,6 +58,23 @@ public class ConnectionManager {
 			instance = new ConnectionManager();
 		}
 		return instance;
+	}
+
+	public static Statement getStatement() {
+		Connection connection = getConnection();
+		if (connection == null) {
+			return null;
+		}
+
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+		} catch (SQLException e) {
+			System.out.println("Could not create a statement: " + e.getMessage());
+			return null;
+		}
+
+		return statement;
 	}
 
 }

@@ -1,4 +1,4 @@
-package net.jgp.labs.db.informix;
+package net.jgp.labs.db.informix.utils;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

@@ -1,4 +1,4 @@
-package net.jgp.labs.db.informix;
+package net.jgp.labs.db.informix.utils;
 
 import com.informix.jdbc.Version;
 

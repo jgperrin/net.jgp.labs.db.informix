@@ -1,20 +1,20 @@
-package net.jgp.labs.db.informix;
+package net.jgp.labs.db.informix.record;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import net.jgp.labs.db.informix.utils.ConnectionManager;
+
 public class ReadRecord {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		ReadRecord rr = new ReadRecord();
 		rr.executeDbOperation("SELECT * FROM items ORDER BY item_num");
 	}
 
 	private boolean executeDbOperation(String query) {
-		// TODO Auto-generated method stub
 		Connection connection = ConnectionManager.getConnection();
 		if (connection == null) {
 			return false;
