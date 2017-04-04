@@ -64,12 +64,7 @@ public class PrettyFormatterColumn {
 		return dashes(columnWidth);
 	}
 
-	public String dashes(String str) {
-		int l = str.length();
-		return dashes(l);
-	}
-
-	public String dashes(int l) {
+	private String dashes(int l) {
 		String dashes = "";
 		for (int i = 0; i < l; i++) {
 			dashes += '-';
