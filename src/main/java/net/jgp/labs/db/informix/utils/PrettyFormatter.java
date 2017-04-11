@@ -3,11 +3,15 @@ package net.jgp.labs.db.informix.utils;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PrettyFormatter {
+	private static Logger log = LoggerFactory.getLogger(PrettyFormatter.class);
+
 	private ResultSet resultSet;
 	private boolean updated = false;
 	private StringBuffer sb;
@@ -35,8 +39,7 @@ public class PrettyFormatter {
 		try {
 			rsmd = resultSet.getMetaData();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Could not extract metadata from result set: {}", e.getMessage(), e);
 			return false;
 		}
 

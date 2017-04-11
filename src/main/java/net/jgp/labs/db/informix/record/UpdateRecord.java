@@ -6,9 +6,14 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Month;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.jgp.labs.db.informix.utils.ConnectionManager;
 
 public class UpdateRecord {
+	private static Logger log = LoggerFactory.getLogger(UpdateRecord.class);
+
 	public static void main(String[] args) {
 
 		ReadRecord rr = new ReadRecord();
@@ -30,8 +35,7 @@ public class UpdateRecord {
 		try {
 			statement.executeUpdate(sqlStatement);
 		} catch (SQLException e) {
-			System.out.println(
-					"Could not execute the following SQL statement '" + sqlStatement + "', got: " + e.getMessage());
+			log.error("Could not execute the following SQL statement '{}', got: ", sqlStatement, e.getMessage(), e);
 			return false;
 		}
 		return true;
