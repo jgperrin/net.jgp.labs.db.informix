@@ -9,6 +9,7 @@ public class DropRecord {
 	public static void main(String[] args) {
 		DropRecord cr = new DropRecord();
 		cr.executeDbOperation("DELETE FROM manufact WHERE manu_code = 'SNT'");
+		cr.executeDbOperation("DELETE FROM customer WHERE lname = 'Perrin'");
 	}
 
 	public boolean executeDbOperation(String sqlStatement) {
