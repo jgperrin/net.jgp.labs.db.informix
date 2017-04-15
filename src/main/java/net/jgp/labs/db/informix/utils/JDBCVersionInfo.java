@@ -12,8 +12,9 @@ public class JDBCVersionInfo {
     try {
       Class.forName("com.informix.jdbc.IfxDriver");
     } catch (ClassNotFoundException e) {
-      System.err.println("Could not access JDBC driver's class: "
-          + e.getMessage());
+      System.err.println(
+          "Could not access JDBC driver's class: " + e
+              .getMessage());
       return;
     }
 
@@ -25,12 +26,12 @@ public class JDBCVersionInfo {
     String informixServer = "lo_informix1210";
     Connection connection;
 
-    String jdbcUrl = "jdbc:informix-sqli://" + hostname + ":"
-        + port + "/" + database + ":INFORMIXSERVER="
+    String jdbcUrl = "jdbc:informix-sqli://" + hostname
+        + ":" + port + "/" + database + ":INFORMIXSERVER="
         + informixServer;
     try {
-      connection = DriverManager.getConnection(jdbcUrl, user,
-          password);
+      connection = DriverManager.getConnection(jdbcUrl,
+          user, password);
     } catch (SQLException e) {
       System.err.println(
           "Could not get a connection to the database: " + e
