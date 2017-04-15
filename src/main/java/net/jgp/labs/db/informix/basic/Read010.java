@@ -1,4 +1,4 @@
-package net.jgp.labs.db.informix.record;
+package net.jgp.labs.db.informix.basic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,40 +12,16 @@ import org.slf4j.LoggerFactory;
 import net.jgp.labs.db.informix.utils.ConnectionManager;
 import net.jgp.labs.db.informix.utils.PrettyFormatter;
 
-public class ReadRecord {
+public class Read010 {
   private static Logger log = LoggerFactory.getLogger(
-      ReadRecord.class);
+      Read010.class);
 
   public static void main(String[] args) {
-    ReadRecord rr = new ReadRecord();
+    Read010 rr = new Read010();
     rr.executeDbOperation(
         "SELECT * FROM items ORDER BY item_num");
     rr.executeDbOperation(
-        "SELECT * FROM manufact ORDER BY manu_code");
-    rr.executeDbOperation(
-        "SELECT * FROM items, manufact WHERE items.manu_code = manufact.manu_code ORDER BY item_num");
-  }
-
-  public boolean executeDbOperation(String query) {
-    Statement statement = ConnectionManager.getStatement();
-    if (statement == null) {
-      return false;
-    }
-
-    ResultSet resultSet;
-    try {
-      resultSet = statement.executeQuery(query);
-    } catch (SQLException e) {
-      System.out.println("Could not get a result set: " + e
-          .getMessage());
-      return false;
-    }
-
-    PrettyFormatter pf = new PrettyFormatter();
-    pf.set(resultSet);
-    pf.show();
-
-    return true;
+        "SELECT * FROM items WHERE total_price < 50 ORDER BY total_price");
   }
 
   /**
@@ -55,13 +31,12 @@ public class ReadRecord {
    * @param query
    * @return
    */
-  public boolean executeDbOperationDetailed(String query) {
+  public boolean executeDbOperation(String query) {
     try {
       Class.forName("com.informix.jdbc.IfxDriver");
     } catch (ClassNotFoundException e) {
-      System.err.println(
-          "Could not access JDBC driver's class: " + e
-              .getMessage());
+      log.error("Could not access JDBC driver's class: {}",
+          e.getMessage(), e);
       return false;
     }
 
@@ -76,13 +51,14 @@ public class ReadRecord {
     String jdbcUrl = "jdbc:informix-sqli://" + hostname
         + ":" + port + "/" + database + ":INFORMIXSERVER="
         + informixServer;
+
     try {
       connection = DriverManager.getConnection(jdbcUrl,
           user, password);
     } catch (SQLException e) {
-      System.err.println(
-          "Could not get a connection to the database: " + e
-              .getMessage());
+      log.error(
+          "Could not get a connection to the database: {}",
+          e.getMessage(), e);
       return false;
     }
 
@@ -90,8 +66,9 @@ public class ReadRecord {
     try {
       statement = connection.createStatement();
     } catch (SQLException e) {
-      System.out.println("Could not create a statement: "
-          + e.getMessage());
+      log.error("Could not create a statement: {}", e
+          .getMessage(), e);
+      silentAttempToCloseConnection(connection);
       return false;
     }
 
@@ -99,8 +76,9 @@ public class ReadRecord {
     try {
       resultSet = statement.executeQuery(query);
     } catch (SQLException e) {
-      System.out.println("Could not get a result set: " + e
-          .getMessage());
+      log.error("Could not get a result set: {}", e
+          .getMessage(), e);
+      silentAttempToCloseConnection(connection);
       return false;
     }
 
@@ -124,18 +102,33 @@ public class ReadRecord {
             "total_price");
 
         // Display values
-        System.out.printf("|%8d|%9d|%9d|%-9s|%8d|%11.2f|\n",
+        System.out.printf("|%8d|%9d|%9d|%-9s|%8d|%11.2f|%n",
             itemNum, orderNum, stockNum, manufacturerCode,
             quantity, totalPrice);
       }
       System.out.println(
           "+--------+---------+---------+---------+--------+-----------+");
     } catch (SQLException e) {
-      System.out.println("Error while browsing result set: "
-          + e.getMessage());
+      log.error("Error while browsing result set: {}", e
+          .getMessage(), e);
+      silentAttempToCloseConnection(connection);
       return false;
     }
+
+    silentAttempToCloseConnection(connection);
+
     return true;
+  }
+
+  private void silentAttempToCloseConnection(
+      Connection connection) {
+    try {
+      connection.close();
+    } catch (SQLException e) {
+      log.warn(
+          "Could not close the connection to the database: {}",
+          e.getMessage(), e);
+    }
   }
 
 }
