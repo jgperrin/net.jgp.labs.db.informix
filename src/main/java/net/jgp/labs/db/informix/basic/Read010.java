@@ -68,7 +68,7 @@ public class Read010 {
     } catch (SQLException e) {
       log.error("Could not create a statement: {}", e
           .getMessage(), e);
-      silentAttempToCloseConnection(connection);
+      close(connection);
       return false;
     }
 
@@ -78,16 +78,17 @@ public class Read010 {
     } catch (SQLException e) {
       log.error("Could not get a result set: {}", e
           .getMessage(), e);
-      silentAttempToCloseConnection(connection);
+      close(statement);
+      close(connection);
       return false;
     }
 
-    System.out.println(
-        "+--------+---------+---------+---------+--------+-----------+");
+    String lineSep =
+        "+--------+---------+---------+---------+--------+-----------+";
+    System.out.println(lineSep);
     System.out.println(
         "|item_num|order_num|stock_num|manu_code|quantity|total_price|");
-    System.out.println(
-        "+--------+---------+---------+---------+--------+-----------+");
+    System.out.println(lineSep);
     try {
       while (resultSet.next()) {
         // Retrieve by column name
@@ -106,22 +107,42 @@ public class Read010 {
             itemNum, orderNum, stockNum, manufacturerCode,
             quantity, totalPrice);
       }
-      System.out.println(
-          "+--------+---------+---------+---------+--------+-----------+");
+      System.out.println(lineSep);
     } catch (SQLException e) {
       log.error("Error while browsing result set: {}", e
           .getMessage(), e);
-      silentAttempToCloseConnection(connection);
+      close(resultSet);
+      close(statement);
+      close(connection);
       return false;
     }
 
-    silentAttempToCloseConnection(connection);
+    close(resultSet);
+    close(statement);
+    close(connection);
 
     return true;
   }
 
-  private void silentAttempToCloseConnection(
-      Connection connection) {
+  private void close(Statement statement) {
+    try {
+      statement.close();
+    } catch (SQLException e) {
+      log.warn("Could not close the statement: {}", e
+          .getMessage(), e);
+    }
+  }
+
+  private void close(ResultSet resultSet) {
+    try {
+      resultSet.close();
+    } catch (SQLException e) {
+      log.warn("Could not close the result set: {}", e
+          .getMessage(), e);
+    }
+  }
+
+  private void close(Connection connection) {
     try {
       connection.close();
     } catch (SQLException e) {
