@@ -9,9 +9,6 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.jgp.labs.db.informix.utils.ConnectionManager;
-import net.jgp.labs.db.informix.utils.PrettyFormatter;
-
 public class Read010 {
   private static Logger log = LoggerFactory.getLogger(
       Read010.class);
@@ -46,12 +43,12 @@ public class Read010 {
     String password = "in4mix";
     String database = "stores_demo";
     String informixServer = "lo_informix1210";
-    Connection connection;
 
     String jdbcUrl = "jdbc:informix-sqli://" + hostname
         + ":" + port + "/" + database + ":INFORMIXSERVER="
         + informixServer;
 
+    Connection connection;
     try {
       connection = DriverManager.getConnection(jdbcUrl,
           user, password);
