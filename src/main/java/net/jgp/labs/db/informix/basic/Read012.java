@@ -9,12 +9,12 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Read010 {
+public class Read012 {
   private static Logger log = LoggerFactory.getLogger(
-      Read010.class);
+      Read012.class);
 
   public static void main(String[] args) {
-    Read010 rr = new Read010();
+    Read012 rr = new Read012();
     rr.executeDbOperation(
         "SELECT * FROM items ORDER BY item_num");
     rr.executeDbOperation(
@@ -87,9 +87,13 @@ public class Read010 {
         "|item_num|order_num|stock_num|manu_code|quantity|total_price|");
     System.out.println(lineSep);
     try {
-      while (resultSet.next()) {
-        // Retrieve by column name
+      boolean inLoop = true;
+      do {
+        if (resultSet.next() == false) {
+          inLoop = false;
+        }
 
+        // Retrieve by column name
         int itemNum = resultSet.getInt("item_num");
         int orderNum = resultSet.getInt("order_num");
         int stockNum = resultSet.getInt("stock_num");
@@ -103,7 +107,7 @@ public class Read010 {
         System.out.printf("|%8d|%9d|%9d|%-9s|%8d|%11.2f|%n",
             itemNum, orderNum, stockNum, manufacturerCode,
             quantity, totalPrice);
-      }
+      } while (inLoop);
     } catch (SQLException e) {
       log.error("Error while browsing result set: {}", e
           .getMessage(), e);

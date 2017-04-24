@@ -9,16 +9,14 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Read010 {
+public class Read011 {
   private static Logger log = LoggerFactory.getLogger(
-      Read010.class);
+      Read011.class);
 
   public static void main(String[] args) {
-    Read010 rr = new Read010();
+    Read011 rr = new Read011();
     rr.executeDbOperation(
         "SELECT * FROM items ORDER BY item_num");
-    rr.executeDbOperation(
-        "SELECT * FROM items WHERE total_price < 50 ORDER BY total_price");
   }
 
   /**
@@ -87,23 +85,20 @@ public class Read010 {
         "|item_num|order_num|stock_num|manu_code|quantity|total_price|");
     System.out.println(lineSep);
     try {
-      while (resultSet.next()) {
-        // Retrieve by column name
+      int itemNum = resultSet.getInt("item_num");
+      int orderNum = resultSet.getInt("order_num");
+      int stockNum = resultSet.getInt("stock_num");
+      String manufacturerCode = resultSet.getString(
+          "manu_code");
+      int quantity = resultSet.getInt("quantity");
+      double totalPrice = resultSet.getDouble(
+          "total_price");
 
-        int itemNum = resultSet.getInt("item_num");
-        int orderNum = resultSet.getInt("order_num");
-        int stockNum = resultSet.getInt("stock_num");
-        String manufacturerCode = resultSet.getString(
-            "manu_code");
-        int quantity = resultSet.getInt("quantity");
-        double totalPrice = resultSet.getDouble(
-            "total_price");
+      // Display values
+      System.out.printf("|%8d|%9d|%9d|%-9s|%8d|%11.2f|%n",
+          itemNum, orderNum, stockNum, manufacturerCode,
+          quantity, totalPrice);
 
-        // Display values
-        System.out.printf("|%8d|%9d|%9d|%-9s|%8d|%11.2f|%n",
-            itemNum, orderNum, stockNum, manufacturerCode,
-            quantity, totalPrice);
-      }
     } catch (SQLException e) {
       log.error("Error while browsing result set: {}", e
           .getMessage(), e);
@@ -112,6 +107,7 @@ public class Read010 {
       close(connection);
       return false;
     }
+
     System.out.println(lineSep);
 
     close(resultSet);
