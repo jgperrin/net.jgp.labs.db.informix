@@ -36,8 +36,8 @@ public class ReadRecord {
     try {
       resultSet = statement.executeQuery(query);
     } catch (SQLException e) {
-      System.out.println("Could not get a result set: " + e
-          .getMessage());
+      log.error("Could not get a result set: {}", e
+          .getMessage(), e);
       return false;
     }
 
