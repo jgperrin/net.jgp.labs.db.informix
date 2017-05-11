@@ -4,92 +4,102 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PrettyFormatterColumn {
-	private int maxColumnWidth = 20;
-	private String columnName;
-	private boolean isString;
-	private int columnWidth = 0;
+  private static Logger log = LoggerFactory.getLogger(
+      PrettyFormatterColumn.class);
 
-	public void setHeading(String columnName) {
-		this.columnName = columnName;
-		setColumnWidth(columnName.length());
-	}
+  private int maxColumnWidth = 20;
+  private String columnName;
+  private boolean isString;
+  private int columnWidth = 0;
 
-	public void setColumnWidth(int width) {
-		if (columnWidth > width) {
-			return;
-		}
-		if (width > this.maxColumnWidth) {
-			this.columnWidth = this.maxColumnWidth;
-		} else {
-			this.columnWidth = width;
-		}
-	}
+  public void setHeading(String columnName) {
+    this.columnName = columnName;
+    setColumnWidth(columnName.length());
+  }
 
-	public void setType(int columnType) {
-		switch (columnType) {
-		case Types.CHAR:
-		case Types.VARCHAR:
-		case Types.LONGNVARCHAR:
-		case Types.CLOB:
-		case Types.LONGVARCHAR:
-		case Types.NCHAR:
-		case Types.NCLOB:
-		case Types.NVARCHAR:
-		case Types.SQLXML:
-			this.isString = true;
-			break;
+  public void setColumnWidth(int width) {
+    if (columnWidth > width) {
+      return;
+    }
+    if (width > this.maxColumnWidth) {
+      this.columnWidth = this.maxColumnWidth;
+    } else {
+      this.columnWidth = width;
+    }
+  }
 
-		default:
-			this.isString = false;
-			break;
-		}
-	}
+  public void setType(int columnType) {
+    switch (columnType) {
+      case Types.CHAR:
+      case Types.VARCHAR:
+      case Types.LONGNVARCHAR:
+      case Types.CLOB:
+      case Types.LONGVARCHAR:
+      case Types.NCHAR:
+      case Types.NCLOB:
+      case Types.NVARCHAR:
+      case Types.SQLXML:
+        this.isString = true;
+        break;
 
-	public void setTypeName(String columnTypeName) {
-		setColumnWidth(columnTypeName.length());
-	}
+      default:
+        this.isString = false;
+        break;
+    }
+  }
 
-	public String getColumnName() {
-		String res = String.format("%-" + columnWidth + "s", this.columnName);
+  public void setTypeName(String columnTypeName) {
+    setColumnWidth(columnTypeName.length());
+  }
 
-		if (res.length() > columnWidth) {
-			return res.substring(0, columnWidth );
-		} else {
-			return res;
-		}
-	}
+  public String getColumnName() {
+    String res = String.format("%-" + columnWidth + "s",
+        this.columnName);
 
-	public String getDashes() {
-		return dashes(columnWidth);
-	}
+    if (res.length() > columnWidth) {
+      return res.substring(0, columnWidth);
+    } else {
+      return res;
+    }
+  }
 
-	private String dashes(int l) {
-		String dashes = "";
-		for (int i = 0; i < l; i++) {
-			dashes += '-';
-		}
-		return dashes;
-	}
+  public String getDashes() {
+    return dashes(columnWidth);
+  }
 
-	public String getFormattedValue(ResultSet resultSet) {
-		String res;
-		try {
-			res = resultSet.getString(columnName);
-		} catch (SQLException e) {
-			res = "null";
-		}
+  private String dashes(int l) {
+    String dashes = "";
+    for (int i = 0; i < l; i++) {
+      dashes += '-';
+    }
+    return dashes;
+  }
 
-		String format = "%";
-		if (isString) {
-			format += '-';
-		}
-		format += columnWidth + "s";
-		res = String.format(format, res);
-		if (res.length() > columnWidth) {
-			return res.substring(0, columnWidth );
-		} else {
-			return res;
-		}
-	}
+  public String getFormattedValue(ResultSet resultSet) {
+    String res;
+    try {
+      res = resultSet.getString(columnName);
+    } catch (SQLException e) {
+      log.error(
+          "Could not get a value for column [{}] from the current resultset: {}, assuming null",
+          columnName, e.getMessage(), e);
+      res = "null";
+    }
+
+    String format = "%";
+    if (isString) {
+      format += '-';
+    }
+    format += columnWidth + "s";
+    res = String.format(format, res);
+    if (res.length() > columnWidth) {
+      return res.substring(0, columnWidth);
+    } else {
+      return res;
+    }
+  }
 }
