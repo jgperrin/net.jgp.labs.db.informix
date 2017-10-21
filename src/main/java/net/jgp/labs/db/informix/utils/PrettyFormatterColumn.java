@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PrettyFormatterColumn {
-  private static Logger log = LoggerFactory.getLogger(
+  private static transient Logger log = LoggerFactory.getLogger(
       PrettyFormatterColumn.class);
 
   private int maxColumnWidth = 20;

@@ -13,7 +13,7 @@ import net.jgp.labs.db.informix.utils.ConnectionManager;
 import net.jgp.labs.db.informix.utils.PrettyFormatter;
 
 public class ReadRecord {
-  private static Logger log = LoggerFactory.getLogger(
+  private static transient Logger log = LoggerFactory.getLogger(
       ReadRecord.class);
 
   public static void main(String[] args) {

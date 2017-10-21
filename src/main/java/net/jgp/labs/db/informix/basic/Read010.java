@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Read010 {
-  private static Logger log = LoggerFactory.getLogger(
+  private static transient Logger log = LoggerFactory.getLogger(
       Read010.class);
 
   public static void main(String[] args) {

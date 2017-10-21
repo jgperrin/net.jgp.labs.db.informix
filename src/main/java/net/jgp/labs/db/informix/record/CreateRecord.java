@@ -14,7 +14,7 @@ import net.jgp.labs.db.informix.utils.ConnectionManager;
 import net.jgp.labs.db.informix.utils.PrettyFormatter;
 
 public class CreateRecord {
-	private static Logger log = LoggerFactory.getLogger(PrettyFormatter.class);
+	private static transient Logger log = LoggerFactory.getLogger(PrettyFormatter.class);
 
 	PreparedStatement insertNewCustomer = null;
 

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import net.jgp.labs.db.informix.utils.ConnectionManager;
 
 public class UpdateRecord {
-	private static Logger log = LoggerFactory.getLogger(UpdateRecord.class);
+	private static transient Logger log = LoggerFactory.getLogger(UpdateRecord.class);
 
 	public static void main(String[] args) {
 
